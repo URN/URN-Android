@@ -14,6 +14,7 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity {
 
     private RadioStream radio;
+    private FloatingActionButton playPauseBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
         radio = new RadioStream(getApplicationContext());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        playPauseBtn = (FloatingActionButton) findViewById(R.id.fab);
+        playPauseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!radio.isPlaying()) {
@@ -33,9 +34,11 @@ public class MainActivity extends AppCompatActivity {
                     radio.play();
                     //stop loading animation
                     //start playing animation
+                    playPauseBtn.setImageResource(R.drawable.stop);
                 }
                 else {
                     radio.stop();
+                    playPauseBtn.setImageResource(R.drawable.play);
                     //stop playing animation
                 }
             }
