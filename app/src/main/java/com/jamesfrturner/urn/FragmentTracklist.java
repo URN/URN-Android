@@ -9,7 +9,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class TracklistFragment extends Fragment {
+public class FragmentTracklist extends Fragment {
     private ArrayList<Song> songHistory;
 
     @Override
@@ -21,9 +21,9 @@ public class TracklistFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tracklist_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_tracklist, container, false);
 
-        SongArrayAdaptor adaptor = new SongArrayAdaptor(getActivity(), songHistory);
+        SongAdaptor adaptor = new SongAdaptor(getActivity(), songHistory);
         ListView tracklistView = (ListView) view.findViewById(R.id.tracklistView);
         tracklistView.setAdapter(adaptor);
 

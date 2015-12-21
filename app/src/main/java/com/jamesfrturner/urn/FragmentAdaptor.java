@@ -6,13 +6,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-public class FragmentPager extends FragmentPagerAdapter {
+public class FragmentAdaptor extends FragmentPagerAdapter {
     final int PAGE_COUNT = 2;
     private String tabTitles[] = new String[] { "Tracklist", "Schedule" };
     private Context context;
 
 
-    public FragmentPager(FragmentManager fm, Context context) {
+    public FragmentAdaptor(FragmentManager fm, Context context) {
         super(fm);
         this.context = context;
     }
@@ -26,9 +26,9 @@ public class FragmentPager extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch(position) {
             case 0:
-                return new TracklistFragment();
+                return new FragmentTracklist();
             case 1:
-                return new ScheduleFragment();
+                return new FragmentSchedule();
             default:
                 return null;
 

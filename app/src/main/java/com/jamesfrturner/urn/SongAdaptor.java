@@ -9,14 +9,14 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class SongArrayAdaptor extends ArrayAdapter<Song> {
+public class SongAdaptor extends ArrayAdapter<Song> {
     private static class ViewHolder {
         TextView title;
         TextView artist;
         TextView played;
     }
 
-    public SongArrayAdaptor(Context context, List<Song> songs) {
+    public SongAdaptor(Context context, List<Song> songs) {
         super(context, 0, songs);
     }
 
