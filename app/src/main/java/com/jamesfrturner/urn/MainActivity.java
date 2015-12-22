@@ -9,11 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 public class MainActivity extends AppCompatActivity {
 
     private RadioStream radio;
     private FloatingActionButton playPauseBtn;
+    private ProgressBar fabProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
         radio = new RadioStream(getApplicationContext());
 
+        fabProgress = (ProgressBar) findViewById(R.id.fabProgress);
+
         playPauseBtn = (FloatingActionButton) findViewById(R.id.fab);
         playPauseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,21 +36,20 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void execute() {
                         playPauseBtn.setImageResource(R.drawable.stop);
-                        //stop loading animation
+                        fabProgress.setVisibility(View.GONE);
                         playPauseBtn.setEnabled(true);
-                        //start playing animation
                     }
                 }
 
                 if (!radio.isPlaying()) {
-                    //start loading animation
+                    fabProgress.setVisibility(View.VISIBLE);
+                    playPauseBtn.setImageResource(0);
                     playPauseBtn.setEnabled(false);
                     radio.play(new PlayCallback());
                 }
                 else {
                     radio.stop();
                     playPauseBtn.setImageResource(R.drawable.play);
-                    //stop playing animation
                 }
             }
         });
