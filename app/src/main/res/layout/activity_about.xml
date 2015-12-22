@@ -16,7 +16,7 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="App designed and developed by James Turner"
+        android:text="@string/about_text"
         android:textAlignment="center" />
 
     <TextView
@@ -31,7 +31,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Visit urn1350.net"
+        android:text="@string/open_website_btn"
         android:id="@+id/openWebsiteBtn"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp" />

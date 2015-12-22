@@ -13,8 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="NOW PLAYING"
-        android:id="@+id/textView"
+        android:text="@string/now_playing"
+        android:textAllCaps="true"
         android:textColor="#7dffffff"
         android:textStyle="bold"
         android:textSize="10dp" />
