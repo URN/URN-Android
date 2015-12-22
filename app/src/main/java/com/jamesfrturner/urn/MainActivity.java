@@ -28,12 +28,20 @@ public class MainActivity extends AppCompatActivity {
         playPauseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                class PlayCallback implements CallbackInterface {
+                    @Override
+                    public void execute() {
+                        playPauseBtn.setImageResource(R.drawable.stop);
+                        //stop loading animation
+                        playPauseBtn.setEnabled(true);
+                        //start playing animation
+                    }
+                }
+
                 if (!radio.isPlaying()) {
                     //start loading animation
-                    radio.play();
-                    //stop loading animation
-                    //start playing animation
-                    playPauseBtn.setImageResource(R.drawable.stop);
+                    playPauseBtn.setEnabled(false);
+                    radio.play(new PlayCallback());
                 }
                 else {
                     radio.stop();
