@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="You haven't listened to any songs yet."
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:id="@+id/tracklistEmptyMessage"/>
 
     <ListView
         android:layout_width="match_parent"
