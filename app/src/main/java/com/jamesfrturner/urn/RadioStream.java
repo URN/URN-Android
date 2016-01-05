@@ -13,7 +13,7 @@ import java.util.Map;
 public class RadioStream {
     private static final String URL = "http://128.243.106.145:8080/urn_high.mp3";
     private Context context;
-    private MediaPlayer mediaPlayer;
+    private static MediaPlayer mediaPlayer;
 
 
     public RadioStream(Context context) {

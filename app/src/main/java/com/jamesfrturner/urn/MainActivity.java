@@ -33,8 +33,12 @@ public class MainActivity extends AppCompatActivity {
         radio = new RadioStream(getApplicationContext());
 
         fabProgress = (ProgressBar) findViewById(R.id.fabProgress);
-
         playPauseBtn = (FloatingActionButton) findViewById(R.id.fab);
+
+        if (radio.isPlaying()) {
+            playPauseBtn.setImageResource(R.drawable.stop);
+        }
+
         playPauseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
