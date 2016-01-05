@@ -53,7 +53,6 @@ public class RadioStream {
             public void onPrepared(MediaPlayer player) {
                 callback.execute();
                 player.start();
-                Toast.makeText(context, "Stream started", Toast.LENGTH_LONG).show();
             }
         });
 

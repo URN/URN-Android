@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="5dp"
-    android:gravity="center_vertical|center_horizontal">
+    android:gravity="center_vertical|center_horizontal"
+    android:id="@+id/onAirContainer">
 
     <TextView
         android:layout_width="wrap_content"
@@ -18,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Turner &amp; Turner"
+        android:text=""
         android:textColor="#ffffff"
         android:id="@+id/currentShowName"
         android:layout_gravity="center_horizontal"

@@ -14,14 +14,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
     private RadioStream radio;
+    private RestClient restClient;
     private FloatingActionButton playPauseBtn;
     private ProgressBar fabProgress;
-
-    private Song currentSong;
-
-    private RestClient restClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,16 +70,45 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         restClient = RestClient.getInstance();
-        restClient.setCallback(new RestClient.ResultReadyCallback() {
+        restClient.setCurrentSongCallback(new RestClient.CurrentSongReadyCallback() {
             @Override
             public void resultReady(Song currentSong) {
-                if (currentSong != null) {
-                    refreshCurrentSong(currentSong);
-                }
+                refreshCurrentSong(currentSong);
+            }
+        });
+
+        restClient.setScheduleCallback(new RestClient.ScheduleReadyCallback() {
+            @Override
+            public void resultReady(Schedule schedule) {
+                refreshCurrentShow(schedule.getCurrentShow());
             }
         });
 
         restClient.requestCurrentSong();
+        restClient.requestSchedule();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_about) {
+            startActivity(new Intent(this, AboutActivity.class));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void refreshCurrentSong(final Song currentSong) {
@@ -115,27 +140,24 @@ public class MainActivity extends AppCompatActivity {
                 timeout);
     }
 
+    public void refreshCurrentShow(final Show currentShow) {
+        TextView textView = (TextView) findViewById(R.id.currentShowName);
+        LinearLayout container = (LinearLayout) findViewById(R.id.onAirContainer);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_about) {
-            startActivity(new Intent(this, AboutActivity.class));
-            return true;
+        if (currentShow != null) {
+            textView.setText(currentShow.getName());
+            container.setVisibility(View.VISIBLE);
+        }
+        else {
+            container.setVisibility(View.GONE);
         }
 
-        return super.onOptionsItemSelected(item);
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        restClient.requestSchedule();
+                    }
+                },
+                180000);
     }
 }

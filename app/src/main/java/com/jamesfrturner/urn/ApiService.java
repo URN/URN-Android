@@ -6,4 +6,7 @@ import retrofit.http.GET;
 public interface ApiService {
     @GET("/api/current_song")
     Call<Song> getCurrentSong();
+
+    @GET("/api/schedule/week")
+    Call<Schedule> getSchedule();
 }
