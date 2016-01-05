@@ -1,6 +1,9 @@
 package com.jamesfrturner.urn;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -15,6 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+    private static Context context;
+
     private RadioStream radio;
     private RestClient restClient;
     private FloatingActionButton playPauseBtn;
@@ -27,7 +32,9 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setElevation(0);
 
-        radio = new RadioStream(getApplicationContext());
+        context = getApplicationContext();
+
+        radio = new RadioStream(context);
 
         fabProgress = (ProgressBar) findViewById(R.id.fabProgress);
         playPauseBtn = (FloatingActionButton) findViewById(R.id.fab);
@@ -42,9 +49,14 @@ public class MainActivity extends AppCompatActivity {
                 class PlayCallback implements CallbackInterface {
                     @Override
                     public void execute() {
-                        playPauseBtn.setImageResource(R.drawable.stop);
-                        fabProgress.setVisibility(View.GONE);
+                        if (!isConnected()) {
+                            playPauseBtn.setImageResource(R.drawable.play);
+                        }
+                        else {
+                            playPauseBtn.setImageResource(R.drawable.stop);
+                        }
                         playPauseBtn.setEnabled(true);
+                        fabProgress.setVisibility(View.GONE);
                     }
                 }
 
@@ -81,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
         restClient.setScheduleCallback(new RestClient.ScheduleReadyCallback() {
             @Override
             public void resultReady(Schedule schedule) {
-                refreshCurrentShow(schedule.getCurrentShow());
+                Show currentShow = schedule != null ? schedule.getCurrentShow() : null;
+                refreshCurrentShow(currentShow);
             }
         });
 
@@ -113,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void refreshCurrentSong(final Song currentSong) {
-        final int progress = currentSong.getPercentagePlayed();
+        final int progress = currentSong != null ? currentSong.getPercentagePlayed() : 100;
         int timeout = currentSong == null ? 500 : 5000;
 
         TextView textView = (TextView) findViewById(R.id.currentSong);
@@ -129,10 +142,14 @@ public class MainActivity extends AppCompatActivity {
             container.setVisibility(View.GONE);
         }
 
+        if (!isConnected()) {
+            timeout = 10000;
+        }
+
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        if (progress >= 100) {
+                        if (progress >= 100 && isConnected()) {
                             restClient.requestCurrentSong();
                         }
                         else {
@@ -162,5 +179,17 @@ public class MainActivity extends AppCompatActivity {
                     }
                 },
                 180000);
+    }
+
+    public static Context getContext() {
+        return context;
+    }
+
+    public static boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 }

@@ -9,7 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Uptown Funk"
+        android:textColor="#6e6e6e"
+        android:text="Title"
         android:id="@+id/songTitle"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -20,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Bruno Mars"
+        android:text="Artist"
         android:id="@+id/songArtist"
         android:layout_below="@+id/songTitle"
         android:layout_alignParentLeft="true"
@@ -36,6 +37,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:visibility="invisible"
         android:textSize="14sp" />
 
 </RelativeLayout>

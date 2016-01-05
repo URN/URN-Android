@@ -22,6 +22,11 @@ public class RestClient{
     }
 
     public void requestCurrentSong() {
+        if (!MainActivity.isConnected()) {
+            currentSongCallback.resultReady(null);
+            return;
+        }
+
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Song.class, new CurrentSongDeserializer())
                 .create();
@@ -53,6 +58,11 @@ public class RestClient{
     }
 
     public void requestSchedule() {
+        if (!MainActivity.isConnected()) {
+            scheduleCallback.resultReady(null);
+            return;
+        }
+
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Schedule.class, new ScheduleDeserializer())
                 .create();

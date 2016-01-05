@@ -44,7 +44,7 @@ public class SongAdaptor extends ArrayAdapter<Song> {
 
         viewHolder.title.setText(song.getTitle());
         viewHolder.artist.setText(song.getArtist());
-        viewHolder.played.setText(Integer.toString(song.getPercentagePlayed()));
+        viewHolder.played.setText(song.getTimeSincePlayed());
 
         return convertView;
     }

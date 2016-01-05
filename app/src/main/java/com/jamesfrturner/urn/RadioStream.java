@@ -46,6 +46,12 @@ public class RadioStream {
     }
 
     public void play(final CallbackInterface callback) {
+        if (!MainActivity.isConnected()) {
+            Toast.makeText(context, "No internet connection", Toast.LENGTH_LONG).show();
+            callback.execute();
+            return;
+        }
+
         MediaPlayer player = getPlayer();
 
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){

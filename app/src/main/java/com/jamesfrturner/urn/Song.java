@@ -58,6 +58,11 @@ public class Song {
         return 0;
     }
 
+    public String getTimeSincePlayed() {
+        // TODO return the time the song was played ago
+        return "Played 0 mins ago";
+    }
+
     public String toString() {
         return getTitle() + " - " + getArtist();
     }
