@@ -1,41 +1,64 @@
 package com.jamesfrturner.urn;
 
-import android.text.format.DateUtils;
 import java.util.Date;
 
 public class Song {
     private String title;
     private String artist;
+    private Date startTime;
+    private int durationSeconds;
     private String show;
-    private Date played;
-    private int length;
 
-    public Song(String title, String artist, String show, Date played, int length) {
-        this.title = title;
-        this.artist = artist;
-        this.show = show;
-        this.played = played;
-        this.length = length;
+    public Song() {
+
     }
 
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getArtist() {
         return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public int getDurationSeconds() {
+        return durationSeconds;
+    }
+
+    public void setDurationSeconds(int durationSeconds) {
+        this.durationSeconds = durationSeconds;
     }
 
     public String getShow() {
         return show;
     }
 
-    public String getPlayed() {
-        String ago = DateUtils.getRelativeTimeSpanString(this.played.getTime(), System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
-        return ago;
+    public void setShow(String show) {
+        this.show = show;
     }
 
-    public int getLength() {
-        return length;
+    public int getPercentagePlayed() {
+        // TODO return between 0 and 100
+        return 0;
+    }
+
+    public String toString() {
+        return getTitle() + " - " + getArtist();
     }
 }

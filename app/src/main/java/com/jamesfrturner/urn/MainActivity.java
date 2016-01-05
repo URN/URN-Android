@@ -9,13 +9,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     private RadioStream radio;
     private FloatingActionButton playPauseBtn;
     private ProgressBar fabProgress;
+
+    private Song currentSong;
+
+    private RestClient restClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +68,49 @@ public class MainActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        restClient = RestClient.getInstance();
+        restClient.setCallback(new RestClient.ResultReadyCallback() {
+            @Override
+            public void resultReady(Song currentSong) {
+                if (currentSong != null) {
+                    refreshCurrentSong(currentSong);
+                }
+            }
+        });
+
+        restClient.requestCurrentSong();
     }
+
+    public void refreshCurrentSong(final Song currentSong) {
+        final int progress = currentSong.getPercentagePlayed();
+        int timeout = currentSong == null ? 500 : 5000;
+
+        TextView textView = (TextView) findViewById(R.id.currentSong);
+        LinearLayout container = (LinearLayout) findViewById(R.id.nowPlayingContainer);
+        if (currentSong != null && progress < 100) {
+            textView.setText(currentSong.toString());
+            container.setVisibility(View.VISIBLE);
+        }
+        else {
+            textView.setText("URN Live");
+            container.setVisibility(View.GONE);
+        }
+
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        if (progress >= 100) {
+                            restClient.requestCurrentSong();
+                        }
+                        else {
+                            refreshCurrentSong(currentSong);
+                        }
+                    }
+                },
+                timeout);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

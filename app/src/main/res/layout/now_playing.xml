@@ -8,7 +8,10 @@
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
     android:paddingLeft="8dp"
-    android:elevation="10dp">
+    android:elevation="10dp"
+    android:animateLayoutChanges="true"
+    android:id="@+id/nowPlayingContainer"
+    android:visibility="gone">
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Uptown Funk - Bruno Mars"
+        android:text=""
         android:id="@+id/currentSong"
         android:textColor="#ffffff" />
 </LinearLayout>
