@@ -2,4 +2,10 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="play_button_size">120dp</dimen>
+    <dimen name="play_icon_size">40dp</dimen>
+    <dimen name="message_send_button_size">35dp</dimen>
+    <dimen name="logo_wings_size">220dp</dimen>
+    <dimen name="logo_letter_width">50dp</dimen>
 </resources>

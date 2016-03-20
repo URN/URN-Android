@@ -2,4 +2,7 @@
     <string name="app_name">URN</string>
     <string name="action_about">About</string>
     <string name="action_schedule">Schedule</string>
+    <string name="slogan">Your music. Your news. Your student sound.</string>
+    <string name="logo_wings_description">The decorative wings surrounding the URN logo</string>
+    <string name="logo_letter_n_description">The letter N in the URN logo</string>
 </resources>

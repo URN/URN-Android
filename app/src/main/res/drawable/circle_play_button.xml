@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="false">
+        <shape android:shape="oval">
+            <solid android:color="@android:color/white"/>
+        </shape>
+    </item>
+    <item android:state_pressed="true">
+        <shape android:shape="oval">
+            <solid android:color="@color/colorAccent"/>
+        </shape>
+    </item>
+    <item
+        android:width="@dimen/play_icon_size"
+        android:height="@dimen/play_icon_size"
+        android:drawable="@drawable/play"
+        android:gravity="center"/>
+</selector>
