@@ -4,6 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="play_button_size">120dp</dimen>
+    <dimen name="play_button_loading_spinner_size">140dp</dimen>
     <dimen name="play_icon_size">40dp</dimen>
     <dimen name="message_send_button_size">35dp</dimen>
     <dimen name="logo_wings_size">220dp</dimen>
