@@ -3,6 +3,7 @@ package com.jamesfrturner.urn;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -46,8 +47,10 @@ public class RadioStream {
         return getPlayer().isPlaying();
     }
 
-    public void play(final Handler.Callback callback) {
-        // TODO Check for internet access here
+    public boolean play(final Handler.Callback callback) {
+        if (!isNetworkConnected()) {
+            return false;
+        }
 
         MediaPlayer player = getPlayer();
 
@@ -60,10 +63,17 @@ public class RadioStream {
         });
 
         player.prepareAsync();
+
+        return true;
     }
 
     public void stop() {
         getPlayer().reset();
         this.mediaPlayer = null;
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 }

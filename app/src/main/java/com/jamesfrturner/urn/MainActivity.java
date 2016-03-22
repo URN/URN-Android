@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
                     playButton.setEnabled(false);
 
-                    stream.play(new Handler.Callback() {
+                    boolean success = stream.play(new Handler.Callback() {
                         public boolean handleMessage(Message msg) {
                             try {
                                 pba.changeState(PlayButtonAnimator.STATE_PLAYING);
@@ -56,6 +57,22 @@ public class MainActivity extends AppCompatActivity {
                             return false;
                         }
                     });
+
+                    if (!success) {
+                        try {
+                            pba.changeState(PlayButtonAnimator.STATE_STOPPED);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        playButton.setEnabled(true);
+
+                        Toast.makeText(
+                                MainActivity.this,
+                                "The stream could not be loaded. Try checking your internet connection",
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
                 }
             }
         });
