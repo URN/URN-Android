@@ -4,10 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimaryDark"
-    android:paddingTop="5dp"
-    android:paddingBottom="10dp"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp">
+    android:paddingTop="5dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -17,7 +14,9 @@
         android:textColor="@android:color/white"
         android:textSize="24dp"
         android:ellipsize="end"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:paddingLeft="@dimen/now_playing_padding"
+        android:paddingRight="@dimen/now_playing_padding" />
 
     <TextView
         android:layout_width="match_parent"
@@ -26,5 +25,14 @@
         android:textColor="@android:color/white"
         android:ellipsize="end"
         android:textSize="18dp"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:paddingLeft="@dimen/now_playing_padding"
+        android:paddingRight="@dimen/now_playing_padding"
+        android:paddingBottom="10dp" />
+
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/now_playing_progress_height"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:progress="34" />
 </LinearLayout>
