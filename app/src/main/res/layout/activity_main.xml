@@ -75,7 +75,7 @@
                 android:visibility="gone"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
-                android:elevation="1dp"
+                android:elevation="10dp"
                 android:id="@+id/play_button_load_spinner"
                 style="?android:attr/progressBarStyle"
                 android:layout_gravity="center_vertical|center_horizontal"/>

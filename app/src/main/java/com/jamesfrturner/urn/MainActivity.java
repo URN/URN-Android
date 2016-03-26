@@ -1,8 +1,12 @@
 package com.jamesfrturner.urn;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,28 +17,37 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    private RadioStreamService streamService;
+    private boolean streamServiceIsBound = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Context context = getApplicationContext();
+        Intent intent = new Intent(this, RadioStreamService.class);
+        ComponentName streamService = startService(new Intent(this, RadioStreamService.class));
+        bindService(intent, streamServiceConnection, BIND_AUTO_CREATE);
+    }
 
-        final RadioStream stream = new RadioStream(context);
+    private void setPlayButtonListeners() {
+        final Context context = getApplicationContext();
+        streamService.setContext(context);
+
         final PlayButtonAnimator pba = new PlayButtonAnimator(MainActivity.this, this);
         final Button playButton = (Button) findViewById(R.id.play_button);
 
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (stream.isPlaying()) {
+                if (streamService.isPlaying()) {
                     try {
                         pba.changeState(PlayButtonAnimator.STATE_STOPPED);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                    stream.stop();
+                    streamService.stop();
                 }
                 else {
                     try {
@@ -45,10 +58,19 @@ public class MainActivity extends AppCompatActivity {
 
                     playButton.setEnabled(false);
 
-                    boolean success = stream.play(new Handler.Callback() {
+                    boolean success = streamService.play(new Handler.Callback() {
                         public boolean handleMessage(Message msg) {
                             try {
-                                pba.changeState(PlayButtonAnimator.STATE_PLAYING);
+                                switch (msg.arg1) {
+                                    case RadioStreamService.STATE_PLAYING:
+                                        pba.changeState(PlayButtonAnimator.STATE_PLAYING);
+                                        break;
+                                    case RadioStreamService.STATE_BUFFERING:
+                                        pba.changeState(PlayButtonAnimator.STATE_LOADING);
+                                        break;
+                                    default:
+                                        break;
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -82,8 +104,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+    private ServiceConnection streamServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            RadioStreamService.MyLocalBinder binder = (RadioStreamService.MyLocalBinder) service;
+            streamService = binder.getService();
+            streamServiceIsBound = true;
+
+            setPlayButtonListeners();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            streamServiceIsBound = false;
+        }
+    };
 }
