@@ -5,5 +5,6 @@
     <string name="slogan">Your music. Your news. Your student sound.</string>
     <string name="logo_wings_description">The decorative wings surrounding the URN logo</string>
     <string name="logo_letter_n_description">The letter N in the URN logo</string>
+    <string name="on_air_prefix">On Air:</string>
     <string name="stream_error">The stream could not be loaded. Try checking your internet connection</string>
 </resources>
