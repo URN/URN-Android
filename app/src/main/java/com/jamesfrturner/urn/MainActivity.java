@@ -67,9 +67,11 @@ public class MainActivity extends AppCompatActivity {
 
                         playButton.setEnabled(true);
 
+                        String errorMessage = getResources().getString(R.string.stream_error);
+
                         Toast.makeText(
                                 MainActivity.this,
-                                "The stream could not be loaded. Try checking your internet connection",
+                                errorMessage,
                                 Toast.LENGTH_LONG
                         ).show();
                     }
