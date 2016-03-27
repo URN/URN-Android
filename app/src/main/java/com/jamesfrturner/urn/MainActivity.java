@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setTitle(getResources().getString(R.string.app_name_long));
+
         Intent intent = new Intent(this, RadioStreamService.class);
         startService(intent);
         bindService(intent, streamServiceConnection, BIND_AUTO_CREATE);
