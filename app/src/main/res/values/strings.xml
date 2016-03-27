@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">URN</string>
     <string name="app_name_long">University Radio Nottingham</string>
+    <string name="app_name_full">URN: University Radio Nottingham</string>
     <string name="action_about">About</string>
     <string name="action_schedule">Schedule</string>
     <string name="slogan">Your music. Your news. Your student sound.</string>
