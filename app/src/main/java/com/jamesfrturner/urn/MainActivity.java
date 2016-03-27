@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -26,16 +25,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent intent = new Intent(this, RadioStreamService.class);
-        ComponentName streamService = startService(new Intent(this, RadioStreamService.class));
+        startService(intent);
         bindService(intent, streamServiceConnection, BIND_AUTO_CREATE);
     }
 
     private void setPlayButtonListeners() {
         final Context context = getApplicationContext();
-        streamService.setContext(context);
-
         final PlayButtonAnimator pba = new PlayButtonAnimator(MainActivity.this, this);
         final Button playButton = (Button) findViewById(R.id.play_button);
+
+        streamService.setContext(context);
+
+        if (streamService.isPlaying()) {
+            try {
+                pba.changeState(PlayButtonAnimator.STATE_PLAYING);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,13 +116,20 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    protected void onDestroy() {
+        if (streamServiceIsBound) {
+            unbindService(streamServiceConnection);
+        }
+        super.onDestroy();
+    }
+
     private ServiceConnection streamServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             RadioStreamService.MyLocalBinder binder = (RadioStreamService.MyLocalBinder) service;
             streamService = binder.getService();
             streamServiceIsBound = true;
-
             setPlayButtonListeners();
         }
 

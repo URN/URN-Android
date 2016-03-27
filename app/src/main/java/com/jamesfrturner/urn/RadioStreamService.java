@@ -28,6 +28,11 @@ public class RadioStreamService extends Service {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
         return binder;
     }
@@ -37,23 +42,23 @@ public class RadioStreamService extends Service {
     }
 
     private MediaPlayer getPlayer() {
-        if (this.mediaPlayer != null) {
-            return this.mediaPlayer;
+        if (mediaPlayer != null) {
+            return mediaPlayer;
         }
 
         MediaPlayer player = new MediaPlayer();
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         headers.put("User-Agent", "URN Android App");
 
         try {
-            player.setDataSource(this.context, Uri.parse(this.streamUrl), headers);
+            player.setDataSource(this.context, Uri.parse(streamUrl), headers);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        this.mediaPlayer = player;
+        mediaPlayer = player;
         return player;
     }
 
@@ -103,7 +108,8 @@ public class RadioStreamService extends Service {
 
     public void stop() {
         getPlayer().reset();
-        this.mediaPlayer = null;
+        mediaPlayer = null;
+        stopSelf();
     }
 
     private boolean isNetworkConnected() {

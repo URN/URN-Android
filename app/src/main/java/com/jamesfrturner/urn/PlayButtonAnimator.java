@@ -26,10 +26,6 @@ public class PlayButtonAnimator {
     public void changeState(int newState) throws Exception {
         int oldState = currentState;
 
-        if (oldState == newState) {
-            return;
-        }
-
         switch (newState) {
             case STATE_STOPPED:
                 currentState = STATE_STOPPED;
