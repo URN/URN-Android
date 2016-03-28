@@ -3,16 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.jamesfrturner.urn.MainActivity">
+
     <item
         android:id="@+id/action_about"
-        android:orderInCategory="100"
+        android:orderInCategory="2"
         android:title="@string/action_about"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="3"
+        android:title="@string/action_settings"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_schedule"
         android:icon="@drawable/calendar"
-        android:orderInCategory="100"
+        android:orderInCategory="1"
         android:title="@string/action_schedule"
         app:showAsAction="always"/>
 </menu>

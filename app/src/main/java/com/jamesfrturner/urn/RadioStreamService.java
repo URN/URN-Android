@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -14,6 +15,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
@@ -25,7 +27,8 @@ public class RadioStreamService extends Service {
     public static final int STATE_PLAYING = 1;
     public static final int STATE_BUFFERING = 2;
     private static final int NOTIFICATION_ID = 1;
-    private static final String streamUrl = "http://128.243.106.145:8080/urn_high.mp3";
+    private static final String HIGH_QUALITY_STREAM_URL = "http://posurnl.nottingham.ac.uk:8080/urn_high.mp3";
+    private static final String LOW_QUALITY_STREAM_URL = "http://posurnl.nottingham.ac.uk:8080/urn_mobile.mp3";
 
     private final IBinder binder = new MyLocalBinder();
     private Context context;
@@ -66,7 +69,7 @@ public class RadioStreamService extends Service {
         headers.put("User-Agent", "URN Android App");
 
         try {
-            player.setDataSource(this.context, Uri.parse(streamUrl), headers);
+            player.setDataSource(this.context, Uri.parse(getStreamUrl()), headers);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -75,8 +78,14 @@ public class RadioStreamService extends Service {
         return player;
     }
 
+    private String getStreamUrl() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean highQualityPref = sharedPref.getBoolean(SettingsActivity.KEY_PREF_HIGH_QUALITY_STREAM, false);
+        return highQualityPref ? HIGH_QUALITY_STREAM_URL : LOW_QUALITY_STREAM_URL;
+    }
+
     public boolean isPlaying() {
-        return getPlayer().isPlaying();
+        return mediaPlayer == null ? false : getPlayer().isPlaying();
     }
 
     public boolean play(final Handler.Callback callback) {
