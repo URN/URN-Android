@@ -62,6 +62,10 @@ public class Song {
         }
     }
 
+    public long getEndTimeMillis() {
+        return getStartTimeMillis() + getDurationMillis();
+    }
+
     @Override
     public String toString() {
         return title + " - " + artist;
