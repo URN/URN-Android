@@ -9,30 +9,31 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Prisoner"
         android:textStyle="bold"
         android:textColor="@android:color/white"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:ellipsize="end"
         android:singleLine="true"
         android:paddingLeft="@dimen/now_playing_padding"
-        android:paddingRight="@dimen/now_playing_padding" />
+        android:paddingRight="@dimen/now_playing_padding"
+        android:id="@+id/current_song_title" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="The Weeknd"
         android:textColor="@android:color/white"
         android:ellipsize="end"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:singleLine="true"
         android:paddingLeft="@dimen/now_playing_padding"
         android:paddingRight="@dimen/now_playing_padding"
-        android:paddingBottom="10dp" />
+        android:paddingBottom="10dp"
+        android:id="@+id/current_song_artist"/>
 
     <ProgressBar
         android:layout_width="match_parent"
         android:layout_height="@dimen/now_playing_progress_height"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:progress="34" />
+        android:progress="0"
+        android:id="@+id/current_song_progress" />
 </LinearLayout>

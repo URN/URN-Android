@@ -14,7 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +38,29 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RadioStreamService.class);
         startService(intent);
         bindService(intent, streamServiceConnection, BIND_AUTO_CREATE);
+
+        RestClient restClient = new RestClient(this);
+        restClient.getCurrentSong(
+                new Response.Listener<Song>() {
+                    @Override
+                    public void onResponse(Song currentSong) {
+                        TextView artist = (TextView) findViewById(R.id.current_song_artist);
+                        artist.setText(currentSong.getArtist());
+
+                        TextView title = (TextView) findViewById(R.id.current_song_title);
+                        title.setText(currentSong.getTitle());
+
+                        ProgressBar progress = (ProgressBar) findViewById(R.id.current_song_progress);
+                        progress.setProgress(currentSong.getProgress());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Hide current song view / show error
+                    }
+                }
+        );
     }
 
     private void setPlayButtonListeners() {
