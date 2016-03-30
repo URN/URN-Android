@@ -42,6 +42,25 @@ public class MainActivity extends AppCompatActivity {
 
         final RestClient restClient = new RestClient(this);
         startCurrentSongPolling(restClient);
+
+
+
+
+
+        restClient.getSchedule(
+                new Response.Listener<Schedule>() {
+                    @Override
+                    public void onResponse(Schedule schedule) {
+                        ((TextView) findViewById(R.id.on_air_show_name)).setText(schedule.getCurrentShow().getTitle());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Hide on air bar
+                    }
+                }
+        );
     }
 
     private void startCurrentSongPolling(final RestClient restClient) {
