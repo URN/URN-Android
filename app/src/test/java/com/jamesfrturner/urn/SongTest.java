@@ -75,4 +75,27 @@ public class SongTest {
 
         assertTrue(progress == 100);
     }
+
+    @Test
+    public void remainingDuration_HalfwayThrough_isCorrect() throws Exception {
+        long now = System.currentTimeMillis();
+
+        song.setStartTimeMillis(now - (song.getDurationMillis() / 2));
+
+        int remaining = song.getRemainingDurationMillis();
+        int actualRemaining = song.getDurationMillis() / 2;
+
+        assertTrue(remaining <= actualRemaining + 100 && remaining >= actualRemaining - 100);
+    }
+
+    @Test
+    public void remainingDuration_LessThanZero_isCorrect() throws Exception {
+        long now = System.currentTimeMillis();
+
+        song.setStartTimeMillis(now - (song.getDurationMillis() + 1000000));
+
+        int remaining = song.getRemainingDurationMillis();
+
+        assertTrue(remaining == 0);
+    }
 }

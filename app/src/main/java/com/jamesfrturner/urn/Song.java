@@ -62,8 +62,17 @@ public class Song {
         }
     }
 
-    public long getEndTimeMillis() {
-        return getStartTimeMillis() + getDurationMillis();
+    public int getRemainingDurationMillis() {
+        long progressMilliseconds = System.currentTimeMillis() - getStartTimeMillis();
+        long durationMilliseconds = getDurationMillis();
+
+        long remaining = durationMilliseconds - progressMilliseconds;
+
+        if (remaining < 0) {
+            return 0;
+        }
+
+        return (int) remaining;
     }
 
     @Override

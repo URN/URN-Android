@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -39,28 +40,48 @@ public class MainActivity extends AppCompatActivity {
         startService(intent);
         bindService(intent, streamServiceConnection, BIND_AUTO_CREATE);
 
-        RestClient restClient = new RestClient(this);
-        restClient.getCurrentSong(
-                new Response.Listener<Song>() {
-                    @Override
-                    public void onResponse(Song currentSong) {
-                        TextView artist = (TextView) findViewById(R.id.current_song_artist);
-                        artist.setText(currentSong.getArtist());
+        final RestClient restClient = new RestClient(this);
+        startCurrentSongPolling(restClient);
+    }
 
-                        TextView title = (TextView) findViewById(R.id.current_song_title);
-                        title.setText(currentSong.getTitle());
+    private void startCurrentSongPolling(final RestClient restClient) {
+        final Handler handler = new Handler();
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final Runnable that = this;
+                restClient.getCurrentSong(
+                        new Response.Listener<Song>() {
+                            @Override
+                            public void onResponse(Song currentSong) {
+                                int delay = 10000;
 
-                        ProgressBar progress = (ProgressBar) findViewById(R.id.current_song_progress);
-                        progress.setProgress(currentSong.getProgress());
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Hide current song view / show error
-                    }
-                }
-        );
+                                if (currentSong.getProgress() != 100) {
+                                    delay = currentSong.getRemainingDurationMillis();
+                                }
+                                else {
+                                    currentSong = null;
+                                }
+
+                                onCurrentSongChange(currentSong);
+
+                                handler.postDelayed(that, delay);
+
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                onCurrentSongChange(null);
+                                handler.postDelayed(that, 10000);
+                                // TODO Hide current song view / show error
+                            }
+                        }
+                );
+            }
+        };
+
+        handler.postDelayed(runnable, 100);
     }
 
     private void setPlayButtonListeners() {
@@ -142,6 +163,51 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void onCurrentSongChange(Song currentSong) {
+        TextView artistTextView = (TextView) findViewById(R.id.current_song_artist);
+        TextView titleTextView = (TextView) findViewById(R.id.current_song_title);
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.current_song_progress);
+
+        if (currentSong == null) {
+            artistTextView.setText(getResources().getString(R.string.current_song_artist_placeholder));
+            titleTextView.setText(getResources().getString(R.string.current_song_title_placeholder));
+            progressBar.setProgress(0);
+            return;
+        }
+
+        artistTextView.setText(currentSong.getArtist());
+        titleTextView.setText(currentSong.getTitle());
+
+        final int progress = currentSong.getProgress();
+        final int remainingMilliseconds = currentSong.getRemainingDurationMillis();
+        final int animationInDuration = 1000;
+
+        CurrentSongProgressBarAnimation animIn = new CurrentSongProgressBarAnimation(progressBar, 0, progress);
+        animIn.setDuration(animationInDuration);
+        progressBar.startAnimation(animIn);
+
+        animIn.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                CurrentSongProgressBarAnimation animOut = new CurrentSongProgressBarAnimation(progressBar, progress, 100);
+                animOut.setDuration(remainingMilliseconds - animationInDuration);
+                progressBar.startAnimation(animOut);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        // TODO update ongoing notification
     }
 
     @Override
