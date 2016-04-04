@@ -25,4 +25,5 @@
     <!-- Current song -->
     <string name="current_song_artist_placeholder">URN</string>
     <string name="current_song_title_placeholder">Live</string>
+    <string name="loading">Loading...</string>
 </resources>

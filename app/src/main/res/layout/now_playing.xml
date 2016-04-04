@@ -24,6 +24,7 @@
         android:textColor="@android:color/white"
         android:ellipsize="end"
         android:textSize="18sp"
+        android:text="@string/loading"
         android:singleLine="true"
         android:paddingLeft="@dimen/now_playing_padding"
         android:paddingRight="@dimen/now_playing_padding"
