@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="@dimen/play_button_size"
+        android:layout_height="@dimen/play_button_size"
+        android:background="@drawable/circle_play_button"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/play_button" />
+
+    <ProgressBar
+        android:indeterminate="true"
+        android:layout_width="@dimen/play_button_loading_spinner_size"
+        android:layout_height="@dimen/play_button_loading_spinner_size"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:elevation="10dp"
+        android:id="@+id/play_button_load_spinner"
+        style="?android:attr/progressBarStyle"
+        android:layout_gravity="center_vertical|center_horizontal"/>
+</RelativeLayout>
