@@ -216,7 +216,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
                 CurrentSongProgressBarAnimation animOut = new CurrentSongProgressBarAnimation(progressBar, progress, 100);
-                animOut.setDuration(remainingMilliseconds - animationInDuration);
+
+                int duration = remainingMilliseconds - animationInDuration;
+                duration = duration < 0 ? 0 : duration;
+                animOut.setDuration(duration);
                 progressBar.startAnimation(animOut);
             }
 
