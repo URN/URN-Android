@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,84 +47,8 @@ public class MainActivity extends AppCompatActivity {
 
         final RestClient restClient = new RestClient(this);
         startCurrentSongPolling(restClient);
-
-
-
-
-
-        restClient.getSchedule(
-                new Response.Listener<Schedule>() {
-                    @Override
-                    public void onResponse(Schedule schedule) {
-                        ((TextView) findViewById(R.id.on_air_show_name)).setText(schedule.getCurrentShow().getTitle());
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Hide on air bar
-                    }
-                }
-        );
-
-
-
-
-
-
-        Button sendButton = (Button) findViewById(R.id.message_studio_send);
-        final EditText messageEditText = (EditText) findViewById(R.id.message_studio_text);
-        assert sendButton != null;
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = messageEditText.getText().toString().trim();
-
-                if (message.equals("")) {
-                    return;
-                }
-
-                messageEditText.setText("");
-
-                restClient.sendMessage(
-                        message,
-                        new Response.Listener<Boolean>() {
-                            @Override
-                            public void onResponse(Boolean success) {
-                                String responseMessage = "";
-                                if (success.booleanValue()) {
-                                    responseMessage = getResources().getString(R.string.message_sent);
-                                }
-                                else {
-                                    getResources().getString(R.string.message_not_sent);
-                                }
-
-                                Snackbar.make(findViewById(android.R.id.content), responseMessage, Snackbar.LENGTH_SHORT)
-                                        .show();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // TODO Hide on air bar
-                            }
-                        }
-                );
-            }
-        });
-
-        messageEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    hideKeyboard(v);
-                }
-            }
-        });
-
-
-
-
+        startSchedulePolling(restClient);
+        setSendMessageListeners(restClient);
     }
 
     private void hideKeyboard(View view) {
@@ -153,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
                                 onCurrentSongChange(currentSong);
 
                                 handler.postDelayed(that, delay);
-
                             }
                         },
                         new Response.ErrorListener() {
@@ -171,10 +95,95 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(runnable, 100);
     }
 
+    private void startSchedulePolling(final RestClient restClient) {
+        final TextView onAirTextView = (TextView) findViewById(R.id.on_air_show_name);
+
+        if (onAirTextView == null) {
+            throw new IllegalStateException();
+        }
+
+        restClient.getSchedule(
+                new Response.Listener<Schedule>() {
+                    @Override
+                    public void onResponse(Schedule schedule) {
+                        onAirTextView.setText(schedule.getCurrentShow().getTitle());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Hide on air bar
+                    }
+                }
+        );
+    }
+
+    private void setSendMessageListeners(final RestClient restClient) {
+        Button sendButton = (Button) findViewById(R.id.message_studio_send);
+        final EditText messageEditText = (EditText) findViewById(R.id.message_studio_text);
+        final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
+
+        if (sendButton == null || messageEditText == null || mainLayout == null) {
+            throw new IllegalStateException();
+        }
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = messageEditText.getText().toString().trim();
+
+                if (message.equals("")) {
+                    return;
+                }
+
+                messageEditText.setText("");
+
+                restClient.sendMessage(
+                        message,
+                        new Response.Listener<Boolean>() {
+                            @Override
+                            public void onResponse(Boolean success) {
+                                String responseMessage = "";
+                                if (success) {
+                                    responseMessage = getResources().getString(R.string.message_sent);
+                                }
+                                else {
+                                    getResources().getString(R.string.message_not_sent);
+                                }
+
+                                Snackbar.make(mainLayout, responseMessage, Snackbar.LENGTH_SHORT)
+                                        .show();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Snackbar.make(mainLayout, getResources().getString(R.string.message_not_sent), Snackbar.LENGTH_SHORT)
+                                        .show();
+                            }
+                        }
+                );
+            }
+        });
+
+        messageEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+    }
+
     private void setPlayButtonListeners() {
         final Context context = getApplicationContext();
         final PlayButtonAnimator pba = new PlayButtonAnimator(MainActivity.this, this);
         final Button playButton = (Button) findViewById(R.id.play_button);
+
+        if (playButton == null) {
+            throw new IllegalStateException();
+        }
 
         streamService.setContext(context);
 
@@ -256,6 +265,10 @@ public class MainActivity extends AppCompatActivity {
         TextView artistTextView = (TextView) findViewById(R.id.current_song_artist);
         TextView titleTextView = (TextView) findViewById(R.id.current_song_title);
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.current_song_progress);
+
+        if (artistTextView == null || titleTextView == null || progressBar == null) {
+            throw new IllegalStateException();
+        }
 
         if (currentSong == null) {
             artistTextView.setText(getResources().getString(R.string.current_song_artist_placeholder));
