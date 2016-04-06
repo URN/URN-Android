@@ -85,7 +85,7 @@ public class RadioStreamService extends Service {
     }
 
     public boolean isPlaying() {
-        return mediaPlayer == null ? false : getPlayer().isPlaying();
+        return mediaPlayer != null && getPlayer().isPlaying();
     }
 
     public boolean play(final Handler.Callback callback) {
