@@ -4,7 +4,9 @@
     android:layout_height="wrap_content"
     android:background="@color/colorAccent"
     android:gravity="center"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:id="@+id/current_show_bar"
+    android:visibility="invisible">
 
     <TextView
         android:layout_width="wrap_content"

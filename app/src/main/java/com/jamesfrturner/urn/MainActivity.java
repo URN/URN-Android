@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
                             public void onErrorResponse(VolleyError error) {
                                 onCurrentSongChange(null);
                                 handler.postDelayed(that, 10000);
-                                // TODO Hide current song view / show error
                             }
                         }
                 );
@@ -97,11 +96,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadCurrentShow(AppController controller) {
-        final TextView onAirTextView = (TextView) findViewById(R.id.on_air_show_name);
-
-        if (onAirTextView == null) {
-            throw new IllegalStateException();
-        }
+        final CurrentShowBar bar = new CurrentShowBar(this);
 
         controller.getSchedule(
                 new Response.Listener<Schedule>() {
@@ -110,17 +105,17 @@ public class MainActivity extends AppCompatActivity {
                         Show currentShow = schedule.getCurrentShow();
 
                         if (currentShow == null) {
-                            // TODO Hide on air bar
+                            bar.hide();
                             return;
                         }
 
-                        onAirTextView.setText(currentShow.getTitle());
+                        bar.show(currentShow.getTitle());
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Hide on air bar
+                        bar.hide();
                     }
                 }
         );
