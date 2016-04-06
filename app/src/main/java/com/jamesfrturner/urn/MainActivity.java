@@ -1,5 +1,6 @@
 package com.jamesfrturner.urn;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -8,13 +9,16 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +65,70 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+
+
+
+
+
+
+        Button sendButton = (Button) findViewById(R.id.message_studio_send);
+        final EditText messageEditText = (EditText) findViewById(R.id.message_studio_text);
+        assert sendButton != null;
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = messageEditText.getText().toString().trim();
+
+                if (message.equals("")) {
+                    return;
+                }
+
+                messageEditText.setText("");
+
+                restClient.sendMessage(
+                        message,
+                        new Response.Listener<Boolean>() {
+                            @Override
+                            public void onResponse(Boolean success) {
+                                String responseMessage = "";
+                                if (success.booleanValue()) {
+                                    responseMessage = getResources().getString(R.string.message_sent);
+                                }
+                                else {
+                                    getResources().getString(R.string.message_not_sent);
+                                }
+
+                                Snackbar.make(findViewById(android.R.id.content), responseMessage, Snackbar.LENGTH_SHORT)
+                                        .show();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO Hide on air bar
+                            }
+                        }
+                );
+            }
+        });
+
+        messageEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
+
+
+
+    }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     private void startCurrentSongPolling(final RestClient restClient) {

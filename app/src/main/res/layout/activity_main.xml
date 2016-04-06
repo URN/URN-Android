@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.jamesfrturner.urn.MainActivity"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimary"
+    android:clickable="true"
+    android:focusableInTouchMode="true" >
 
     <include layout="@layout/on_air" />
 
@@ -51,6 +53,8 @@
             android:layout_marginBottom="35dp"/>
 
         <include layout="@layout/now_playing" />
+
+        <include layout="@layout/message_studio" />
     </LinearLayout>
 
 </RelativeLayout>
