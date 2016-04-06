@@ -19,9 +19,11 @@ public class CurrentShowBar {
     }
 
     public void hide() {
-        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.slide_out_top);
-        bar.startAnimation(animation);
-        bar.setVisibility(View.INVISIBLE);
+        if (bar.getVisibility() != View.INVISIBLE) {
+            Animation animation = AnimationUtils.loadAnimation(activity, R.anim.slide_out_top);
+            bar.startAnimation(animation);
+            bar.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void show(String title) {
