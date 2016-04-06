@@ -22,11 +22,16 @@ public class Day {
             LocalTime startTime = show.getStartTime();
             LocalTime endTime = show.getEndTime();
 
-            if (startTime.compareTo(time) <= 0 && time.compareTo(endTime) < 0) {
-                return show;
+            if (startTime.isAfter(endTime)) {
+                if (time.compareTo(startTime) >= 0 || time.compareTo(endTime) < 0) {
+                    return show;
+                }
+            } else {
+                if (startTime.compareTo(time) <= 0 && time.compareTo(endTime) < 0) {
+                    return show;
+                }
             }
         }
-
         return null;
     }
 
