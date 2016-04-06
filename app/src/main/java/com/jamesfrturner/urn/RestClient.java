@@ -1,6 +1,7 @@
 package com.jamesfrturner.urn;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -23,8 +24,8 @@ public class RestClient {
     private RequestQueue requestQueue;
     private HashMap<String, String> headers;
 
-    public RestClient(Activity activity) {
-        this.requestQueue = Volley.newRequestQueue(activity);
+    public RestClient(Context content) {
+        this.requestQueue = Volley.newRequestQueue(content);
         this.headers = new HashMap<>();
         this.headers.put("User-agent", USER_AGENT);
     }

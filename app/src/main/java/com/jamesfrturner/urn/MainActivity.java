@@ -45,10 +45,11 @@ public class MainActivity extends AppCompatActivity {
         startService(intent);
         bindService(intent, streamServiceConnection, BIND_AUTO_CREATE);
 
-        final RestClient restClient = new RestClient(this);
-        startCurrentSongPolling(restClient);
-        startSchedulePolling(restClient);
-        setSendMessageListeners(restClient);
+        AppController controller = ((AppController) getApplicationContext());
+
+        startCurrentSongPolling(controller.getRestClient());
+        setSendMessageListeners(controller.getRestClient());
+        loadCurrentShow(controller);
     }
 
     private void hideKeyboard(View view) {
@@ -95,18 +96,25 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(runnable, 100);
     }
 
-    private void startSchedulePolling(final RestClient restClient) {
+    private void loadCurrentShow(AppController controller) {
         final TextView onAirTextView = (TextView) findViewById(R.id.on_air_show_name);
 
         if (onAirTextView == null) {
             throw new IllegalStateException();
         }
 
-        restClient.getSchedule(
+        controller.getSchedule(
                 new Response.Listener<Schedule>() {
                     @Override
                     public void onResponse(Schedule schedule) {
-                        onAirTextView.setText(schedule.getCurrentShow().getTitle());
+                        Show currentShow = schedule.getCurrentShow();
+
+                        if (currentShow == null) {
+                            // TODO Hide on air bar
+                            return;
+                        }
+
+                        onAirTextView.setText(currentShow.getTitle());
                     }
                 },
                 new Response.ErrorListener() {

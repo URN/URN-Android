@@ -18,8 +18,16 @@ public class Day {
     }
 
     public Show getShowAtTime(LocalTime time) {
-        // TODO return show that's live at that time;
-        return shows.get(5);
+        for (Show show : shows) {
+            LocalTime startTime = show.getStartTime();
+            LocalTime endTime = show.getEndTime();
+
+            if (startTime.compareTo(time) <= 0 && time.compareTo(endTime) < 0) {
+                return show;
+            }
+        }
+
+        return null;
     }
 
     public static int getDayNumberByName(String name) throws Exception {
