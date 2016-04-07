@@ -4,4 +4,10 @@
     <color name="colorPrimaryDark">#291d3b</color>
     <color name="colorAccent">#dd289b</color>
     <color name="colorLight">#fafafa</color>
+
+    <color name="colorDaytime">#E50052</color>
+    <color name="colorAfterDark">#3B4251</color>
+    <color name="colorSport">#009FE3</color>
+    <color name="colorNews">#009994</color>
+    <color name="colorCulture">#ED6346</color>
 </resources>

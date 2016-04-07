@@ -85,4 +85,21 @@ public class Show {
                 return CATEGORY_NONE;
         }
     }
+
+    public String getCategoryColor() {
+        switch (category) {
+            case CATEGORY_AFTER_DARK:
+                return "#3B4251";
+            case CATEGORY_CULTURE:
+                return "#ED6346";
+            case CATEGORY_DAYTIME:
+                return "#E50052";
+            case CATEGORY_NEWS:
+                return "#009994";
+            case CATEGORY_SPORT:
+                return "#009FE3";
+            default:
+                return "#ffffff";
+        }
+    }
 }

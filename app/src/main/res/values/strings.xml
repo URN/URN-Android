@@ -29,4 +29,6 @@
     <string name="message_studio_text_hint">Message the studio...</string>
     <string name="message_sent">Message sent</string>
     <string name="message_not_sent">Message could not be sent</string>
+    <string name="show_card_title_placeholder">Show title</string>
+    <string name="show_card_time_placeholder">9:00 - 11:00</string>
 </resources>

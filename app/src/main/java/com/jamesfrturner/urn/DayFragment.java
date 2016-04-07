@@ -2,6 +2,8 @@ package com.jamesfrturner.urn;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +57,13 @@ public class DayFragment extends Fragment {
     }
 
     private void createScheduleView(Day day, View fragmentView) {
-        TextView textView = (TextView) fragmentView.findViewById(R.id.test_id);
-        textView.setText(day.getShows().toString());
+        RecyclerView rv = (RecyclerView) fragmentView.findViewById(R.id.show_recycler_view);
+        rv.setHasFixedSize(true);
+
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        rv.setLayoutManager(llm);
+
+        ShowRecyclerViewAdaptor adapter = new ShowRecyclerViewAdaptor(day.getShows(), getContext());
+        rv.setAdapter(adapter);
     }
 }
