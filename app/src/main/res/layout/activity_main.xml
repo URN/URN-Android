@@ -28,16 +28,24 @@
                 android:layout_height="@dimen/logo_wings_size"
                 android:src="@drawable/wings"
                 android:layout_centerInParent="true"
-                android:contentDescription="@string/logo_wings_description"/>
+                android:scaleX="0.8"
+                android:scaleY="0.8"
+                android:contentDescription="@string/logo_wings_description"
+                android:id="@+id/play_wings_bottom"
+                android:translationX="-10dp"
+                android:visibility="invisible" />
 
             <ImageView
                 android:layout_width="@dimen/logo_wings_size"
                 android:layout_height="@dimen/logo_wings_size"
                 android:src="@drawable/wings"
-                android:scaleX="-1"
-                android:scaleY="-1"
+                android:scaleX="-0.8"
+                android:scaleY="-0.8"
                 android:layout_centerInParent="true"
-                android:contentDescription="@string/logo_wings_description"/>
+                android:contentDescription="@string/logo_wings_description"
+                android:id="@+id/play_wings_top"
+                android:translationX="10dp"
+                android:visibility="invisible" />
 
             <include layout="@layout/play_button"
                 android:layout_height="wrap_content"
@@ -50,8 +58,7 @@
             android:layout_height="wrap_content"
             android:text="@string/slogan"
             android:textColor="@android:color/white"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="35dp"/>
+            android:layout_marginBottom="35dp" />
 
         <include layout="@layout/now_playing" />
 
