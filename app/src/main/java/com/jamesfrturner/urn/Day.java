@@ -55,4 +55,8 @@ public class Day {
                 throw new Exception("Invalid day name");
         }
     }
+
+    public List<Show> getShows() {
+        return shows;
+    }
 }
