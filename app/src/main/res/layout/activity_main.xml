@@ -14,7 +14,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:paddingTop="@dimen/main_top_padding">
@@ -60,9 +60,12 @@
             android:textColor="@android:color/white"
             android:layout_marginBottom="35dp" />
 
-        <include layout="@layout/now_playing" />
-
         <include layout="@layout/message_studio" />
     </LinearLayout>
+
+    <include layout="@layout/now_playing"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
