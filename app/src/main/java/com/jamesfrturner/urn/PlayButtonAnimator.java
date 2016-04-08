@@ -16,7 +16,7 @@ public class PlayButtonAnimator {
     public final static int STATE_PLAYING = 1;
     public final static int STATE_LOADING = 2;
 
-    private int oldState;
+    private int oldState = STATE_STOPPED;
 
     private static int currentState = STATE_STOPPED;
     private Context context;
