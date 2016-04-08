@@ -1,7 +1,6 @@
 package com.jamesfrturner.urn;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -17,7 +16,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -139,7 +137,7 @@ public class RadioStreamService extends Service {
     private Notification getNotification() {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_wings)
                         .setContentTitle(getResources().getString(R.string.app_name_full))
                         .setContentText("Prisoner - The Weeknd");
 
