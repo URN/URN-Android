@@ -140,8 +140,8 @@ public class RadioStreamService extends Service {
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_wings)
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_urn))
-                        .setContentTitle(getResources().getString(R.string.app_name_full))
-                        .setContentText("Prisoner - The Weeknd");
+                        .setContentTitle(getResources().getString(R.string.app_name))
+                        .setContentText(getResources().getString(R.string.app_name_long));
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
