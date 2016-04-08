@@ -4,13 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:layout_width="@dimen/play_button_size"
-        android:layout_height="@dimen/play_button_size"
-        android:background="@drawable/circle_play_button"
+    <ImageButton
+        android:src="@drawable/play"
+        android:padding="40dp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/play_button" />
+        android:background="@drawable/circle_play_button"
+        android:layout_width="@dimen/play_button_size"
+        android:layout_height="@dimen/play_button_size"
+        android:id="@+id/play_button"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter" />
 
     <ProgressBar
         android:indeterminate="true"

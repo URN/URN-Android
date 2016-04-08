@@ -5,6 +5,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -22,6 +25,7 @@ import android.view.animation.RotateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -186,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
     private void setPlayButtonListeners() {
         final Context context = getApplicationContext();
         final PlayButtonAnimator pba = new PlayButtonAnimator(MainActivity.this, this);
-        final Button playButton = (Button) findViewById(R.id.play_button);
+        final ImageButton playButton = (ImageButton) findViewById(R.id.play_button);
 
         if (playButton == null) {
             throw new IllegalStateException();
