@@ -16,10 +16,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
+        android:gravity="center"
         android:layout_above="@+id/now_playing_container">
 
         <RelativeLayout
             android:layout_width="wrap_content"
+            android:layout_marginLeft="16dp"
             android:layout_height="match_parent"
             android:id="@+id/play_button_container">
 
@@ -57,7 +59,7 @@
 
         <include
             layout="@layout/message_studio"
-            android:visibility="invisible" />
+             />
 
 
     </LinearLayout>

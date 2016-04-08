@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -15,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +24,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -130,13 +133,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setSendMessageListeners(final RestClient restClient) {
-        Button sendButton = (Button) findViewById(R.id.message_studio_send);
+        final ImageButton sendButton = (ImageButton) findViewById(R.id.message_studio_send);
         final EditText messageEditText = (EditText) findViewById(R.id.message_studio_text);
         final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
 
         if (sendButton == null || messageEditText == null || mainLayout == null) {
             throw new IllegalStateException();
         }
+
+        final Activity activity = this;
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,15 +167,13 @@ public class MainActivity extends AppCompatActivity {
                                     getResources().getString(R.string.message_not_sent);
                                 }
 
-                                Snackbar.make(mainLayout, responseMessage, Snackbar.LENGTH_SHORT)
-                                        .show();
+                                Toast.makeText(activity, responseMessage, Toast.LENGTH_LONG).show();
                             }
                         },
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Snackbar.make(mainLayout, getResources().getString(R.string.message_not_sent), Snackbar.LENGTH_SHORT)
-                                        .show();
+                                Toast.makeText(activity, getResources().getString(R.string.message_not_sent), Toast.LENGTH_LONG).show();
                             }
                         }
                 );
@@ -183,6 +186,17 @@ public class MainActivity extends AppCompatActivity {
                 if (!hasFocus) {
                     hideKeyboard(v);
                 }
+            }
+        });
+
+        messageEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    sendButton.performClick();
+                    return true;
+                }
+                return false;
             }
         });
     }

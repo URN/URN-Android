@@ -31,6 +31,7 @@
     <string name="message_studio_text_hint">Message the studio...</string>
     <string name="message_sent">Message sent</string>
     <string name="message_not_sent">Message could not be sent</string>
+    <string name="message_send_description">Send button</string>
 
     <!-- Schedule show cards -->
     <string name="show_card_title_placeholder">Show title</string>

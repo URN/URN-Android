@@ -3,19 +3,37 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:background="@color/colorLight">
+    android:layout_margin="16dp"
+    android:gravity="center">
 
     <EditText
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:hint="@string/message_studio_text_hint"
-        android:id="@+id/message_studio_text" />
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
+        android:paddingRight="6dp"
+        android:paddingEnd="6dp"
+        android:singleLine="true"
+        android:id="@+id/message_studio_text"
+        android:imeOptions="actionDone"
+        android:elevation="4dp"
+        android:background="@drawable/bg_rounded_corners"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Send"
-        android:id="@+id/message_studio_send" />
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/circle_button_accent"
+        android:src="@drawable/icon_send"
+        android:padding="16dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:id="@+id/message_studio_send"
+        android:contentDescription="@string/message_send_description" />
+
 </LinearLayout>
