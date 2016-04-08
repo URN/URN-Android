@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -138,6 +139,7 @@ public class RadioStreamService extends Service {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_wings)
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_urn))
                         .setContentTitle(getResources().getString(R.string.app_name_full))
                         .setContentText("Prisoner - The Weeknd");
 
