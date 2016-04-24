@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -350,6 +351,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        }
+
+        if (id == R.id.action_visit_website) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://urn1350.net")));
             return true;
         }
 
