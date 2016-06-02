@@ -32,6 +32,7 @@ public class RadioStreamService extends Service {
     private final IBinder binder = new MyLocalBinder();
     private Context context;
     private static MediaPlayer mediaPlayer;
+    private static boolean isLoading = false;
 
     public RadioStreamService() {
     }
@@ -87,6 +88,10 @@ public class RadioStreamService extends Service {
         return mediaPlayer != null && getPlayer().isPlaying();
     }
 
+    public boolean isLoading() {
+        return isLoading;
+    }
+
     public boolean play(final Handler.Callback callback) {
         if (!isNetworkConnected()) {
             return false;
@@ -102,6 +107,7 @@ public class RadioStreamService extends Service {
                 message.arg1 = STATE_PLAYING;
                 callback.handleMessage(message);
                 startForeground(NOTIFICATION_ID, getNotification());
+                isLoading = false;
                 player.start();
             }
         });
@@ -111,10 +117,12 @@ public class RadioStreamService extends Service {
             public boolean onInfo(MediaPlayer mp, int what, int extra) {
                 switch (what) {
                     case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                        isLoading = true;
                         message.arg1 = STATE_BUFFERING;
                         callback.handleMessage(message);
                         break;
                     case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                        isLoading = false;
                         message.arg1 = STATE_PLAYING;
                         callback.handleMessage(message);
                         break;
@@ -124,12 +132,14 @@ public class RadioStreamService extends Service {
         });
 
         player.prepareAsync();
+        isLoading = true;
 
         return true;
     }
 
     public void stop() {
         getPlayer().reset();
+        isLoading = false;
         mediaPlayer = null;
         stopSelf();
         stopForeground(true);

@@ -213,13 +213,16 @@ public class MainActivity extends AppCompatActivity {
 
         streamService.setContext(context);
 
-        if (streamService.isPlaying()) {
-            try {
-                pba.changeState(PlayButtonAnimator.STATE_PLAYING);
+        try {
+            if (streamService.isLoading()) {
+                pba.changeState(PlayButtonAnimator.STATE_LOADING, false);
             }
-            catch (Exception e) {
-                e.printStackTrace();
+            if (streamService.isPlaying()) {
+                pba.changeState(PlayButtonAnimator.STATE_PLAYING, false);
             }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
 
         playButton.setOnClickListener(new View.OnClickListener() {
@@ -227,31 +230,38 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (streamService.isPlaying()) {
                     try {
-                        pba.changeState(PlayButtonAnimator.STATE_STOPPED);
+                        pba.changeState(PlayButtonAnimator.STATE_STOPPED, true);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
 
                     streamService.stop();
                 }
-                else {
+                else if (streamService.isLoading()) {
+                    streamService.stop();
+
                     try {
-                        pba.changeState(PlayButtonAnimator.STATE_LOADING);
+                        pba.changeState(PlayButtonAnimator.STATE_STOPPED, true);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-                    playButton.setEnabled(false);
+                }
+                else {
+                    try {
+                        pba.changeState(PlayButtonAnimator.STATE_LOADING, true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     boolean success = streamService.play(new Handler.Callback() {
                         public boolean handleMessage(Message msg) {
                             try {
                                 switch (msg.arg1) {
                                     case RadioStreamService.STATE_PLAYING:
-                                        pba.changeState(PlayButtonAnimator.STATE_PLAYING);
+                                        pba.changeState(PlayButtonAnimator.STATE_PLAYING, true);
                                         break;
                                     case RadioStreamService.STATE_BUFFERING:
-                                        pba.changeState(PlayButtonAnimator.STATE_LOADING);
+                                        pba.changeState(PlayButtonAnimator.STATE_LOADING, true);
                                         break;
                                     default:
                                         break;
@@ -260,14 +270,13 @@ public class MainActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            playButton.setEnabled(true);
                             return false;
                         }
                     });
 
                     if (!success) {
                         try {
-                            pba.changeState(PlayButtonAnimator.STATE_STOPPED);
+                            pba.changeState(PlayButtonAnimator.STATE_STOPPED, false);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
