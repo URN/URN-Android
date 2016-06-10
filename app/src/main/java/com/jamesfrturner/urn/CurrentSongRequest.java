@@ -25,6 +25,7 @@ public class CurrentSongRequest<T> extends Request<T> {
         this.clazz = clazz;
         this.headers = headers;
         this.listener = listener;
+        this.setShouldCache(false);
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Song.class, new CurrentSongDeserializer());
