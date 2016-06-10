@@ -20,7 +20,14 @@ public class CurrentSongDeserializer implements JsonDeserializer {
         String title = jsonObject.get("title").getAsString();
         String artist = jsonObject.get("artist").getAsString();
         long startTimeMilliseconds = jsonObject.get("start_time").getAsLong() * 1000;
-        BigInteger duration = jsonObject.get("duration").getAsBigInteger();
+
+        BigInteger duration;
+
+        try {
+            duration = jsonObject.get("duration").getAsBigInteger();
+        } catch (Exception e) {
+            duration = new BigInteger("0");
+        }
 
         // Convert duration from mAirList times units to milliseconds
         // https://www.mairlist.com/forum/index.php?topic=4182.0
