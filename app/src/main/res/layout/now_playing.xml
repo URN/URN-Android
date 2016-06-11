@@ -14,7 +14,7 @@
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:ellipsize="end"
-        android:singleLine="true"
+        android:maxLines="1"
         android:paddingLeft="@dimen/now_playing_padding"
         android:paddingRight="@dimen/now_playing_padding"
         android:id="@+id/current_song_title" />
@@ -26,7 +26,7 @@
         android:ellipsize="end"
         android:textSize="18sp"
         android:text="@string/loading"
-        android:singleLine="true"
+        android:maxLines="1"
         android:paddingLeft="@dimen/now_playing_padding"
         android:paddingRight="@dimen/now_playing_padding"
         android:paddingBottom="10dp"
