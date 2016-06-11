@@ -33,9 +33,11 @@
         android:id="@+id/current_song_artist"/>
 
     <ProgressBar
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="@dimen/now_playing_progress_height"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:progressDrawable="@drawable/linear_progress_bar"
         android:progress="0"
+        android:max="100"
         android:id="@+id/current_song_progress" />
 </LinearLayout>

@@ -9,7 +9,7 @@
     <dimen name="message_send_button_size">35dp</dimen>
     <dimen name="logo_wings_size">220dp</dimen>
     <dimen name="logo_letter_width">50dp</dimen>
-    <dimen name="now_playing_progress_height">5dp</dimen>
+    <dimen name="now_playing_progress_height">4dp</dimen>
     <dimen name="now_playing_padding">15dp</dimen>
     <dimen name="main_top_padding">45dp</dimen>
 </resources>
