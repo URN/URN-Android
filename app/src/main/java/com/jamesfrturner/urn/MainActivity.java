@@ -5,16 +5,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.drawable.AnimatedVectorDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -22,15 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -263,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
                                     case RadioStreamService.STATE_BUFFERING:
                                         pba.changeState(PlayButtonAnimator.STATE_LOADING, true);
                                         break;
-                                    case RadioStreamService.STATE_UNFOCUSED:
+                                    case RadioStreamService.STATE_STOPPED:
                                         pba.changeState(PlayButtonAnimator.STATE_STOPPED, true);
                                         break;
                                     case RadioStreamService.STATE_DUCKING:

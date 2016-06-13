@@ -26,7 +26,7 @@ public class RadioStreamService extends Service {
     public static final int STATE_PLAYING = 1;
     public static final int STATE_BUFFERING = 2;
     public static final int STATE_DUCKING = 3;
-    public static final int STATE_UNFOCUSED = 4;
+    public static final int STATE_STOPPED = 4;
     private static final int NOTIFICATION_ID = 1;
     private static final String HIGH_QUALITY_STREAM_URL = "http://posurnl.nottingham.ac.uk:8080/urn_high.mp3";
     private static final String LOW_QUALITY_STREAM_URL = "http://posurnl.nottingham.ac.uk:8080/urn_mobile.mp3";
@@ -56,7 +56,7 @@ public class RadioStreamService extends Service {
                         break;
 
                     case AudioManager.AUDIOFOCUS_LOSS:
-                        message.arg1 = STATE_UNFOCUSED;
+                        message.arg1 = STATE_STOPPED;
                         playCallback.handleMessage(message);
                         stop();
                         break;
@@ -68,7 +68,7 @@ public class RadioStreamService extends Service {
                         if (mediaPlayer.isPlaying()) {
                             mediaPlayer.pause();
                             isPaused = true;
-                            message.arg1 = STATE_UNFOCUSED;
+                            message.arg1 = STATE_STOPPED;
                             playCallback.handleMessage(message);
                         }
                         break;
@@ -159,7 +159,7 @@ public class RadioStreamService extends Service {
                         AudioManager.AUDIOFOCUS_GAIN);
 
                 if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                    message.arg1 = STATE_UNFOCUSED;
+                    message.arg1 = STATE_STOPPED;
                 }
                 else {
                     startForeground(NOTIFICATION_ID, getNotification());
@@ -191,14 +191,42 @@ public class RadioStreamService extends Service {
             }
         });
 
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                stop();
+                play(callback);
+                message.arg1 = STATE_BUFFERING;
+                callback.handleMessage(message);
+            }
+        });
+
+        player.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                stop();
+                message.arg1 = STATE_STOPPED;
+                callback.handleMessage(message);
+                return false;
+            }
+        });
+
         if (isPaused) {
             player.start();
             isLoading = true;
             isPaused = false;
         }
         else {
-            player.prepareAsync();
-            isLoading = true;
+            try {
+                isLoading = true;
+                player.prepareAsync();
+            }
+            catch (IllegalStateException e) {
+                isLoading = false;
+                message.arg1 = STATE_STOPPED;
+                callback.handleMessage(message);
+                stop();
+            }
         }
 
         return true;
