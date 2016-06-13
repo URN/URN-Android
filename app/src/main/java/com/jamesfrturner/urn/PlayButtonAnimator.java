@@ -41,7 +41,7 @@ public class PlayButtonAnimator {
         spinner = (ProgressBar) activity.findViewById(R.id.play_button_load_spinner);
         spinAnimation = AnimationUtils.loadAnimation(context, R.anim.scale_play_button_wings);
 
-        if (Build.VERSION.SDK_INT >= 21) {
+        if (Build.VERSION.SDK_INT >= 23) {
             avdPlayToStop = AnimatedVectorDrawableCompat.create(context, R.drawable.avd_play_stop);
             avdStopToPlay = AnimatedVectorDrawableCompat.create(context, R.drawable.avd_stop_play);
 
@@ -65,7 +65,7 @@ public class PlayButtonAnimator {
                 topWings.setVisibility(View.INVISIBLE);
                 bottomWings.setVisibility(View.INVISIBLE);
 
-                if (oldState == STATE_PLAYING && animate && Build.VERSION.SDK_INT >= 21) {
+                if (oldState == STATE_PLAYING && animate && Build.VERSION.SDK_INT >= 23) {
                     playButton.setImageDrawable(avdStopToPlay);
                     avdStopToPlay.start();
                 }
@@ -90,7 +90,7 @@ public class PlayButtonAnimator {
             case STATE_PLAYING:
                 spinner.setVisibility(View.GONE);
 
-                if (oldState == STATE_STOPPED && animate && Build.VERSION.SDK_INT >= 21) {
+                if (oldState == STATE_STOPPED && animate && Build.VERSION.SDK_INT >= 23) {
                     playButton.setImageDrawable(avdPlayToStop);
                     avdPlayToStop.start();
                 }
