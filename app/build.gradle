@@ -8,8 +8,8 @@ android {
         applicationId "com.jamesfrturner.urn"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 21
-        versionName "2.1.0"
+        versionCode 211
+        versionName "2.1.1"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
