@@ -25,6 +25,8 @@ import java.util.Map;
 public class RadioStreamService extends Service {
     public static final int STATE_PLAYING = 1;
     public static final int STATE_BUFFERING = 2;
+    public static final int STATE_DUCKING = 3;
+    public static final int STATE_UNFOCUSED = 4;
     private static final int NOTIFICATION_ID = 1;
     private static final String HIGH_QUALITY_STREAM_URL = "http://posurnl.nottingham.ac.uk:8080/urn_high.mp3";
     private static final String LOW_QUALITY_STREAM_URL = "http://posurnl.nottingham.ac.uk:8080/urn_mobile.mp3";
@@ -33,12 +35,54 @@ public class RadioStreamService extends Service {
     private Context context;
     private static MediaPlayer mediaPlayer;
     private static boolean isLoading = false;
+    private static boolean isPaused = false;
+    private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener;
+    private Handler.Callback playCallback = null;
 
     public RadioStreamService() {
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+            @Override
+            public void onAudioFocusChange(int focusChange) {
+                final Message message = new Message();
+
+                switch (focusChange) {
+                    case AudioManager.AUDIOFOCUS_GAIN:
+                        play(playCallback);
+                        mediaPlayer.setVolume(1.0f, 1.0f);
+                        break;
+
+                    case AudioManager.AUDIOFOCUS_LOSS:
+                        message.arg1 = STATE_UNFOCUSED;
+                        playCallback.handleMessage(message);
+                        stop();
+                        break;
+
+                    case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                        // Lost focus for a short time, but we have to stop
+                        // playback. We don't release the media player because playback
+                        // is likely to resume
+                        if (mediaPlayer.isPlaying()) {
+                            mediaPlayer.pause();
+                            isPaused = true;
+                            message.arg1 = STATE_UNFOCUSED;
+                            playCallback.handleMessage(message);
+                        }
+                        break;
+
+                    case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                        // Lost focus for a short time, but it's ok to keep playing
+                        // at an attenuated level
+                        if (mediaPlayer.isPlaying()) mediaPlayer.setVolume(0.1f, 0.1f);
+                        break;
+                }
+
+            }
+        };
+
         return START_STICKY;
     }
 
@@ -97,18 +141,34 @@ public class RadioStreamService extends Service {
             return false;
         }
 
+        playCallback = callback;
+
         MediaPlayer player = getPlayer();
+
+        if (player.isPlaying()) {
+            return true;
+        }
 
         final Message message = new Message();
 
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){
             @Override
             public void onPrepared(MediaPlayer player) {
-                message.arg1 = STATE_PLAYING;
+                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                int result = audioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC,
+                        AudioManager.AUDIOFOCUS_GAIN);
+
+                if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    message.arg1 = STATE_UNFOCUSED;
+                }
+                else {
+                    startForeground(NOTIFICATION_ID, getNotification());
+                    message.arg1 = STATE_PLAYING;
+                    player.start();
+                }
+
                 callback.handleMessage(message);
-                startForeground(NOTIFICATION_ID, getNotification());
                 isLoading = false;
-                player.start();
             }
         });
 
@@ -131,16 +191,26 @@ public class RadioStreamService extends Service {
             }
         });
 
-        player.prepareAsync();
-        isLoading = true;
+        if (isPaused) {
+            player.start();
+            isLoading = true;
+            isPaused = false;
+        }
+        else {
+            player.prepareAsync();
+            isLoading = true;
+        }
 
         return true;
     }
 
     public void stop() {
-        getPlayer().reset();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
         isLoading = false;
-        mediaPlayer = null;
+        isPaused = false;
         stopSelf();
         stopForeground(true);
     }

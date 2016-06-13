@@ -263,6 +263,12 @@ public class MainActivity extends AppCompatActivity {
                                     case RadioStreamService.STATE_BUFFERING:
                                         pba.changeState(PlayButtonAnimator.STATE_LOADING, true);
                                         break;
+                                    case RadioStreamService.STATE_UNFOCUSED:
+                                        pba.changeState(PlayButtonAnimator.STATE_STOPPED, true);
+                                        break;
+                                    case RadioStreamService.STATE_DUCKING:
+                                        // volume has been lowered
+                                        break;
                                     default:
                                         break;
                                 }
