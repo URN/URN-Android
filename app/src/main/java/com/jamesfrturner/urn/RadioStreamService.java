@@ -1,17 +1,21 @@
 package com.jamesfrturner.urn;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -28,8 +32,9 @@ public class RadioStreamService extends Service {
     public static final int STATE_DUCKING = 3;
     public static final int STATE_STOPPED = 4;
     private static final int NOTIFICATION_ID = 1;
-    private static final String HIGH_QUALITY_STREAM_URL = "http://posurnl.nottingham.ac.uk:8080/urn_high.mp3";
-    private static final String LOW_QUALITY_STREAM_URL = "http://posurnl.nottingham.ac.uk:8080/urn_mobile.mp3";
+    private static final String HIGH_QUALITY_STREAM_URL = "https://corona.urn1350.net/radio/8000/urn_high.mp3";
+    private static final String LOW_QUALITY_STREAM_URL = "https://corona.urn1350.net/radio/8000/urn_high.mp3";
+    //I know i know but there's only one stream right now! And this is better than zero
 
     private final IBinder binder = new MyLocalBinder();
     private Context context;
@@ -151,7 +156,7 @@ public class RadioStreamService extends Service {
 
         final Message message = new Message();
 
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){
+        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer player) {
                 AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -160,9 +165,8 @@ public class RadioStreamService extends Service {
 
                 if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                     message.arg1 = STATE_STOPPED;
-                }
-                else {
-                    startForeground(NOTIFICATION_ID, getNotification());
+                } else {
+                    startMyOwnForeground();
                     message.arg1 = STATE_PLAYING;
                     player.start();
                 }
@@ -215,13 +219,11 @@ public class RadioStreamService extends Service {
             player.start();
             isLoading = true;
             isPaused = false;
-        }
-        else {
+        } else {
             try {
                 isLoading = true;
                 player.prepareAsync();
-            }
-            catch (IllegalStateException e) {
+            } catch (IllegalStateException e) {
                 isLoading = false;
                 message.arg1 = STATE_STOPPED;
                 callback.handleMessage(message);
@@ -243,29 +245,6 @@ public class RadioStreamService extends Service {
         stopForeground(true);
     }
 
-    private Notification getNotification() {
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_wings)
-                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_urn))
-                        .setContentTitle(getResources().getString(R.string.app_name))
-                        .setContentText(getResources().getString(R.string.app_name_long));
-
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        PendingIntent pi =
-                PendingIntent.getActivity(
-                        this,
-                        0,
-                        intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-
-        builder.setContentIntent(pi);
-        return builder.build();
-    }
-
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
@@ -274,6 +253,41 @@ public class RadioStreamService extends Service {
     public class MyLocalBinder extends Binder {
         RadioStreamService getService() {
             return RadioStreamService.this;
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            startMyOwnForeground();
+        else
+            startForeground(1, new Notification());
+    }
+
+    private void startMyOwnForeground() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            String NOTIFICATION_CHANNEL_ID = "com.jamesfrturner.urn";
+            String channelName = "My Background Service";
+            NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+            chan.setLightColor(Color.BLUE);
+            chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            assert manager != null;
+            manager.createNotificationChannel(chan);
+
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+            Notification notification = notificationBuilder.setOngoing(true)
+                    .setSmallIcon(R.drawable.ic_wings)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_urn))
+                    .setContentTitle(getResources().getString(R.string.app_name))
+                    .setContentText(getResources().getString(R.string.app_name_long))
+                    .setPriority(NotificationManager.IMPORTANCE_MIN)
+                    .setCategory(Notification.CATEGORY_SERVICE)
+                    .build();
+            startForeground(2, notification);
         }
     }
 }
